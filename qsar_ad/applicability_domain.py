@@ -5,8 +5,7 @@ __all__ = ['BaseDomain', 'kNNDomain', 'SVMDomain']
 # Cell
 import pandas as pd
 import numpy as np
-import scipy.stats as stats
-import statsmodels.api as st
+from rdkit import Chem
 from scipy.spatial import distance
 
 # Cell
