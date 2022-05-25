@@ -142,7 +142,7 @@ fastcore       : 1.4.2
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[13:18:05] Initializing Normalizer
+<pre>[14:25:22] Initializing Normalizer
 /opt/anaconda3/lib/python3.8/site-packages/xgboost/compat.py:36: FutureWarning: pandas.Int64Index is deprecated and will be removed from pandas in a future version. Use pandas.Index with the appropriate dtype instead.
   from pandas import MultiIndex, Int64Index
 </pre>
@@ -223,7 +223,74 @@ fastcore       : 1.4.2
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">Xtrain</span> <span class="o">=</span> <span class="n">fingerprinter</span><span class="o">.</span><span class="n">generate_features</span><span class="p">(</span><span class="n">trainset</span><span class="p">[</span><span class="s1">&#39;processed_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 <span class="n">Xtest</span> <span class="o">=</span> <span class="n">fingerprinter</span><span class="o">.</span><span class="n">generate_features</span><span class="p">(</span><span class="n">testset</span><span class="p">[</span><span class="s1">&#39;processed_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-<span class="n">X_sample</span> <span class="o">=</span> <span class="n">Xtest</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">X_sample</span> <span class="o">=</span> <span class="n">Xtest</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Xtest</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_sample_2</span> <span class="o">=</span> <span class="n">fingerprinter</span><span class="o">.</span><span class="n">generate_features</span><span class="p">([</span><span class="n">testset</span><span class="p">[</span><span class="s1">&#39;processed_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_sample</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(1, 1024)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_equal</span><span class="p">(</span><span class="n">X_sample</span><span class="p">,</span> <span class="n">X_sample_2</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -259,7 +326,7 @@ fastcore       : 1.4.2
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">calculate_similarity_from_array</span><span class="p">(</span><span class="n">fp1</span><span class="p">,</span> <span class="n">fp2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">calculate_similarity_from_array</span><span class="p">(</span><span class="n">fp1</span><span class="p">,</span> <span class="n">fp2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;jaccard&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
     
     <span class="sd">&quot;&quot;&quot;Calculates a squared similarity matrix between two arrays of fingerprints</span>
 <span class="sd">    </span>
@@ -300,7 +367,7 @@ fastcore       : 1.4.2
         <span class="n">simi_matrix</span> <span class="o">=</span> <span class="n">distance</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="n">fp1</span><span class="p">,</span> <span class="n">fp2</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">simi_matrix</span>
 
-<span class="k">def</span> <span class="nf">calculate_ad_threhold</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">calculate_ad_threhold</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;jaccard&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
         
     <span class="sd">&quot;&quot;&quot;Calculates the applicability domain threhold using k-NN method</span>
 <span class="sd">    </span>
@@ -355,10 +422,28 @@ fastcore       : 1.4.2
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#ad_threhold</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ad_threhold</span> <span class="o">=</span> <span class="n">calculate_ad_threhold</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">)</span>
+
+<span class="n">ad_threhold</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.9194734400235668</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -406,13 +491,187 @@ fastcore       : 1.4.2
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="c1"># Generate similarity matrix</span>
-    <span class="n">distances</span> <span class="o">=</span> <span class="n">calculate_similarity_from_array</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">ref_fps</span><span class="p">)</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="n">calculate_similarity_from_array</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">ref_fps</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fp</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref_fps</span><span class="p">))</span>
     <span class="c1"># Get kNN</span>
-    <span class="n">neighbours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">distances</span><span class="p">)[:</span> <span class="n">k</span><span class="p">]</span>
+    <span class="n">neighbours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fp</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref_fps</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">distances</span><span class="p">,</span> <span class="n">neighbours</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">distances</span><span class="p">,</span> <span class="n">neighbours</span> <span class="o">=</span> <span class="n">get_knn</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span> <span class="n">Xtrain</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">distances</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(2648,)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">distances_sample</span><span class="p">,</span> <span class="n">neighbours_sample</span> <span class="o">=</span> <span class="n">get_knn</span><span class="p">(</span><span class="n">X_sample</span><span class="p">,</span> <span class="n">Xtrain</span><span class="p">)</span>
+<span class="n">distances_sample</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(1, 2648)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">distances_sample</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">distances</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">distances</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">Xtest</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">distances</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">Xtrain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">kk</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">distances</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">dst</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">neigh</span> <span class="o">=</span> <span class="n">neighbours</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+    <span class="n">kk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dst</span><span class="p">[</span><span class="n">neigh</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">kk</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([0.33653846, 0.37037037, 0.42      , 0.42857143, 0.46078431,
+       0.47572816, 0.48543689, 0.49557522, 0.51351351, 0.52777778])</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -463,7 +722,7 @@ fastcore       : 1.4.2
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">ditances</span><span class="p">,</span> <span class="n">neighbours</span> <span class="o">=</span> <span class="n">get_knn</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">ref_fp</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
-    <span class="n">avg_distance</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[</span><span class="n">neighbours</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">avg_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">neighbours</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">avg_distance</span>
 </pre></div>
 
@@ -481,10 +740,27 @@ fastcore       : 1.4.2
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">avg_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">distances_sample</span><span class="p">,</span> <span class="n">neighbours_sample</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">avg_distance</span><span class="o">&gt;=</span><span class="mf">0.5</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([ True])</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -498,8 +774,7 @@ fastcore       : 1.4.2
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">mols2grid</span><span class="o">.</span><span class="n">MolGrid</span><span class="p">(</span><span class="n">trainset</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">neighbours</span><span class="p">],</span> <span class="n">smiles_col</span><span class="o">=</span><span class="s2">&quot;processed_smiles&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">180</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Hs-HEPG2&quot;</span><span class="p">)</span>
-<span class="n">grid</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span><span class="s2">&quot;img&quot;</span><span class="p">],</span> <span class="n">n_cols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_rows</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ad_threhold</span>
 </pre></div>
 
     </div>
@@ -511,19 +786,197 @@ fastcore       : 1.4.2
 
 <div class="output_area">
 
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-23-11191bce9c71&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-red-fg"># setup the grid</span>
-<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span>grid <span class="ansi-blue-fg">=</span> mols2grid<span class="ansi-blue-fg">.</span>MolGrid<span class="ansi-blue-fg">(</span>trainset<span class="ansi-blue-fg">.</span>iloc<span class="ansi-blue-fg">[</span>neighbours<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> smiles_col<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#34;processed_smiles&#34;</span><span class="ansi-blue-fg">,</span> size<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">200</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">180</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> name<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#34;Hs-HEPG2&#34;</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> grid<span class="ansi-blue-fg">.</span>display<span class="ansi-blue-fg">(</span>subset<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;ID&#34;</span><span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">&#34;img&#34;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> n_cols<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">4</span><span class="ansi-blue-fg">,</span> n_rows<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">)</span>
 
-<span class="ansi-red-fg">NameError</span>: name &#39;neighbours&#39; is not defined</pre>
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.9194734400235668</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">calculate_applicability_domain</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span> <span class="n">Xtrain</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">ad_threhold</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([0.61098674, 0.45142961, 0.68963638, 0.61702224, 0.7618961 ,
+       0.79018336, 0.75093942, 0.63094869, 0.38533987, 0.68428936,
+       0.43575212, 0.71685246, 0.74289203, 0.74459016, 0.64661555,
+       0.61538241, 0.73866228, 0.7275278 , 0.73962316, 0.80795721,
+       0.74442247, 0.68261528, 0.6825706 , 0.75174508, 0.51730006,
+       0.50708319, 0.58156801, 0.55192986, 0.741607  , 0.44439823,
+       0.77118182, 0.77366232, 0.42336297, 0.50471898, 0.58877224,
+       0.70764503, 0.78797507, 0.79787541, 0.80716715, 0.43177211,
+       0.44788453, 0.44924766, 0.44195935, 0.50961282, 0.43075815,
+       0.47368817, 0.43531288, 0.62075708, 0.78179879, 0.7819906 ,
+       0.4340867 , 0.70932196, 0.76597742, 0.80265408, 0.76783991,
+       0.75218678, 0.7557019 , 0.74439282, 0.73959934, 0.74670102,
+       0.77886472, 0.79106291, 0.77540064, 0.77397191, 0.7580933 ,
+       0.78490432, 0.74573406, 0.78189105, 0.4331026 , 0.40482028,
+       0.45940859, 0.81010921, 0.25432034, 0.39463257, 0.35970342,
+       0.74758024, 0.68229416, 0.66848114, 0.61455984, 0.74704786,
+       0.56539845, 0.43969112, 0.56417225, 0.55339012, 0.33704413,
+       0.79419731, 0.81051448, 0.79559258, 0.66095012, 0.41698706,
+       0.26987445, 0.79152628, 0.76817043, 0.79540424, 0.7267804 ,
+       0.3561335 , 0.76245926, 0.82640587, 0.75893903, 0.51220483,
+       0.80347834, 0.77052468, 0.74943865, 0.44404965, 0.5536329 ,
+       0.63839091, 0.59637541, 0.38042687, 0.33427015, 0.67969554,
+       0.71090997, 0.65379733, 0.76059296, 0.41567753, 0.83311387,
+       0.74436298, 0.77689799, 0.60345243, 0.75717966, 0.43968949,
+       0.64403663, 0.77881284, 0.70839998, 0.41135323, 0.65288032,
+       0.783106  , 0.70185424, 0.75219369, 0.8025951 , 0.83422036,
+       0.76475027, 0.74744993, 0.71063517, 0.61731321, 0.7824675 ,
+       0.38893157, 0.78429689, 0.81799549, 0.77294363, 0.46015541,
+       0.62556404, 0.59848543, 0.68639861, 0.7777314 , 0.45380667,
+       0.77796861, 0.75216827, 0.56542109, 0.58265061, 0.5839632 ,
+       0.67981677, 0.76529574, 0.71200843, 0.76137011, 0.79711811,
+       0.75213012, 0.39222518, 0.81859334, 0.79957213, 0.56260489,
+       0.61821762, 0.57507386, 0.57490557, 0.54380978, 0.5211311 ,
+       0.62978465, 0.72799187, 0.69880054, 0.7824048 , 0.75898328,
+       0.79009176, 0.74959413, 0.56821734, 0.70133223, 0.77426783,
+       0.78929734, 0.74575806, 0.63843317, 0.64340481, 0.64935496,
+       0.64204364, 0.48340806, 0.62184856, 0.60056731, 0.56790527,
+       0.64542249, 0.64691723, 0.45481462, 0.62048414, 0.60829044,
+       0.43547948, 0.66290613, 0.50122272, 0.45989691, 0.60053324,
+       0.49638536, 0.64661875, 0.6468085 , 0.62757333, 0.72546699,
+       0.50357779, 0.4673863 , 0.51443622, 0.46728609, 0.46955817,
+       0.43821092, 0.60107304, 0.6205041 , 0.74447849, 0.77586813,
+       0.37873303, 0.72899649, 0.72031324, 0.79193877, 0.53336255,
+       0.75505814, 0.74226573, 0.74617659, 0.7281476 , 0.49931787,
+       0.4409948 , 0.64248286, 0.69695175, 0.47007876, 0.7534882 ,
+       0.25541483, 0.46810881, 0.43658436, 0.76548116, 0.76188509,
+       0.75227899, 0.53720147, 0.77657668, 0.7292268 , 0.81537597,
+       0.65351256, 0.78570863, 0.74420813, 0.74174571, 0.78162141,
+       0.77911592, 0.38556816, 0.44398886, 0.52818173, 0.76260087,
+       0.31171125, 0.33349939, 0.36462356, 0.75573789, 0.79392616,
+       0.51725441, 0.41792427, 0.39693296, 0.59985456, 0.72852889,
+       0.71616884, 0.53709378, 0.7435633 , 0.73171344, 0.74134518,
+       0.4792656 , 0.55993894, 0.39096108, 0.82249384, 0.38238429,
+       0.54461558, 0.66501696, 0.67671211, 0.66472052, 0.63647139,
+       0.77020121, 0.72556706, 0.43237886, 0.81039086, 0.80965221,
+       0.78767102, 0.80165739, 0.59070084, 0.8113385 , 0.77987379,
+       0.53952544, 0.66960875, 0.3522279 , 0.38323546, 0.40898614,
+       0.67142112, 0.66054189, 0.77467659, 0.7543069 , 0.74331506,
+       0.57784397, 0.7244477 , 0.45177521, 0.6225201 , 0.31758372,
+       0.65407279, 0.58774818, 0.69285968, 0.47097442, 0.53181077,
+       0.79862774, 0.7906732 , 0.7355286 , 0.45911194, 0.45460119,
+       0.46243753, 0.40128351, 0.55926653, 0.49395078, 0.74449829,
+       0.69649764, 0.45431432, 0.6775485 , 0.6165945 , 0.73233583,
+       0.71552079, 0.69257031, 0.66844481, 0.76406167, 0.63501352,
+       0.63326162, 0.79048701, 0.75723811, 0.80230782, 0.78564125,
+       0.74925231, 0.76937487, 0.48373186, 0.66736025, 0.7518136 ,
+       0.79716399, 0.72804719, 0.68985961, 0.77479418, 0.4037614 ,
+       0.69324315, 0.72380226, 0.70144325, 0.74850637, 0.64699861,
+       0.67383751, 0.69674315, 0.63738687, 0.40321807, 0.63383697,
+       0.47256646, 0.74851496, 0.65131083, 0.7505965 , 0.77241368,
+       0.65931824, 0.48646404, 0.4895813 , 0.67746816, 0.66260865,
+       0.68715031, 0.79214137, 0.583317  , 0.49567237, 0.80578582,
+       0.73677243, 0.77108568, 0.76517424, 0.54473429, 0.76964014,
+       0.78263684, 0.64076569, 0.6766517 , 0.73635709, 0.75096319,
+       0.74761675, 0.63345259, 0.4188879 , 0.41897212, 0.43517533,
+       0.80244443, 0.69655   , 0.77870389, 0.783204  , 0.74851235,
+       0.58616133, 0.66790028, 0.66615905, 0.6272653 , 0.63647117,
+       0.79915051, 0.72816784, 0.79424931, 0.74791106, 0.69875712,
+       0.71778327, 0.74057901, 0.76823851, 0.58281898, 0.79117939,
+       0.81586593, 0.74979244, 0.75041641, 0.69956354, 0.65480004,
+       0.68997759, 0.69720596, 0.72663978, 0.73385489, 0.75524054,
+       0.64587799, 0.79684847, 0.80116229, 0.61403041, 0.63849517,
+       0.67099513, 0.69633242, 0.681845  , 0.63634873, 0.67967322,
+       0.65617121, 0.69427988, 0.75536967, 0.66683847, 0.60450241,
+       0.68343549, 0.68031171, 0.67426036, 0.67361502, 0.71247079,
+       0.69133091, 0.69143737, 0.67234762, 0.76756249, 0.63303435,
+       0.48373223, 0.5161331 , 0.59026708, 0.65456856, 0.66032152,
+       0.65799682, 0.56979104, 0.48557827, 0.72972743, 0.73445083,
+       0.67400081, 0.72436741, 0.70327428, 0.7313371 , 0.7219009 ,
+       0.72854513, 0.74376469, 0.7534261 , 0.75071464, 0.77576035,
+       0.73272753, 0.44317234, 0.41677277, 0.45350935, 0.46247808,
+       0.45767173, 0.74184538, 0.75165294, 0.68161664, 0.71443736,
+       0.82577731, 0.73745408, 0.79236579, 0.72661654, 0.68062185,
+       0.78886511, 0.77172547, 0.78209204, 0.51340274, 0.74542352,
+       0.49599802, 0.73886998, 0.81636844, 0.64853876, 0.75904594,
+       0.66893004, 0.57548499, 0.58310903, 0.74619467, 0.78874539,
+       0.64625155, 0.55250081, 0.70655491, 0.73416284, 0.68953766,
+       0.71380807, 0.72825493, 0.71938495, 0.69700363, 0.62205501,
+       0.64479794, 0.53558919, 0.55221767, 0.69729925, 0.68750388,
+       0.74110878, 0.74872779, 0.73227609, 0.47173918, 0.55297699,
+       0.48906525, 0.75752334, 0.37621476, 0.3847206 , 0.77713688,
+       0.77466854, 0.75740215, 0.70787321, 0.75645163, 0.63374392,
+       0.74915937, 0.74574048, 0.73935617, 0.84385243, 0.55600745,
+       0.68526701, 0.71018106, 0.66658157, 0.59218467, 0.68783176,
+       0.64505656, 0.62633849, 0.64591748, 0.63663564, 0.63311074,
+       0.74937109, 0.81065869, 0.80333827, 0.75187545, 0.77049714,
+       0.76426017, 0.79932586, 0.77491457, 0.36840003, 0.3758722 ,
+       0.61833643, 0.71133443, 0.47677192, 0.59917686, 0.78746643,
+       0.39972926, 0.4055353 , 0.56569709, 0.43518704, 0.44016069,
+       0.43393278, 0.46384844, 0.39123878, 0.55552222, 0.44402613,
+       0.385623  , 0.3868699 , 0.55798131, 0.6011617 , 0.37076684,
+       0.47713154, 0.42278151, 0.49170579, 0.42819767, 0.39277037,
+       0.37201713, 0.53966066, 0.37532693, 0.43648293, 0.3464456 ,
+       0.75736668, 0.58634078, 0.6108612 , 0.59962915, 0.77324835,
+       0.78041563, 0.71906104, 0.78308007, 0.26767151, 0.66082139,
+       0.75582742, 0.69265355, 0.59949193, 0.77636957, 0.82648881,
+       0.75792474, 0.67555722, 0.78788692, 0.72121959, 0.73988916,
+       0.69160587, 0.69490038, 0.73963232, 0.6143618 , 0.73974078,
+       0.78485191, 0.77477659, 0.74861709, 0.73560763, 0.81932815,
+       0.6037487 , 0.7461686 , 0.74039131, 0.76198901, 0.68959053,
+       0.70477223, 0.67274886, 0.52395831, 0.38915777, 0.73942902,
+       0.64171601, 0.65157136, 0.66076243, 0.71403578, 0.68889231,
+       0.44868239, 0.44823613, 0.61039591, 0.39132934, 0.68087507,
+       0.72699444, 0.72095273, 0.65192844, 0.61519658, 0.74484264,
+       0.64713115, 0.60927321, 0.65687827, 0.69741283, 0.63489288,
+       0.64567931, 0.68433789, 0.62654074, 0.46608061, 0.73918375,
+       0.75525806, 0.79418966, 0.74013026, 0.76231161, 0.78069809,
+       0.79902719, 0.48581855, 0.43544509, 0.44070615, 0.37642789,
+       0.36392692, 0.67990299, 0.4956725 , 0.43640465, 0.46116594,
+       0.84170441, 0.62031862, 0.56279516, 0.56625113, 0.56315908,
+       0.58787445, 0.60278722, 0.73761046, 0.68064729, 0.74028588,
+       0.73844034, 0.74312618, 0.47677085, 0.55403029, 0.73278021,
+       0.77089495, 0.31812373, 0.71219436])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># grid = mols2grid.MolGrid(trainset.iloc[neighbours], smiles_col=&quot;processed_smiles&quot;, size=(200, 180), name=&quot;Hs-HEPG2&quot;)</span>
+<span class="c1"># grid.display(subset=[&quot;ID&quot;,&quot;img&quot;], n_cols=4, n_rows=3)</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
@@ -547,7 +1000,38 @@ fastcore       : 1.4.2
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="kNNDomain" class="doc_header"><code>class</code> <code>kNNDomain</code><a href="https://github.com/marcossantanaioc/qsar_ad/tree/master/qsar_ad/applicability_domain.py#L13" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>kNNDomain</code>(<strong><code>Xref</code></strong>:<code>array</code>)</p>
+<h2 id="BaseDomain" class="doc_header"><code>class</code> <code>BaseDomain</code><a href="https://github.com/marcossantanaioc/qsar_ad/tree/master/qsar_ad/applicability_domain.py#L13" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BaseDomain</code>()</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="kNNDomain" class="doc_header"><code>class</code> <code>kNNDomain</code><a href="https://github.com/marcossantanaioc/qsar_ad/tree/master/qsar_ad/applicability_domain.py#L18" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>kNNDomain</code>(<strong><code>Xref</code></strong>:<code>array</code>, <strong><code>metric</code></strong>=<em><code>'euclidean'</code></em>) :: <a href="/qsar_ad/AD.html#BaseDomain"><code>BaseDomain</code></a></p>
 </blockquote>
 
 </div>
@@ -574,7 +1058,7 @@ fastcore       : 1.4.2
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ad_knn</span> <span class="o">=</span> <span class="n">kNNDomain</span><span class="p">(</span><span class="n">Xref</span><span class="o">=</span><span class="n">Xtrain</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ad_knn</span> <span class="o">=</span> <span class="n">kNNDomain</span><span class="p">(</span><span class="n">Xref</span><span class="o">=</span><span class="n">Xtrain</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -624,7 +1108,7 @@ fastcore       : 1.4.2
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">avg_distance</span> <span class="o">=</span> <span class="n">ad_knn</span><span class="o">.</span><span class="n">calculate_applicability_domain</span><span class="p">(</span><span class="n">X_sample</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">avg_distance</span> <span class="o">=</span> <span class="n">ad_knn</span><span class="o">.</span><span class="n">calculate_applicability_domain</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -641,7 +1125,7 @@ fastcore       : 1.4.2
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">avg_distance</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">avg_distance</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -656,11 +1140,341 @@ fastcore       : 1.4.2
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(7.11829279911435, True)</pre>
+<pre>array([ True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True])</pre>
 </div>
 
 </div>
 
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="OneClass-SVM">OneClass SVM<a class="anchor-link" href="#OneClass-SVM"> </a></h1>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">OneClassSVM</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">OneClassSVM</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result"><style>#sk-container-id-1 {color: black;background-color: white;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>OneClassSVM()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">OneClassSVM</label><div class="sk-toggleable__content"><pre>OneClassSVM()</pre></div></div></div></div></div></div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_sample</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-36-ed603f38dff4&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>preds <span class="ansi-blue-fg">=</span> model<span class="ansi-blue-fg">.</span>predict<span class="ansi-blue-fg">(</span>X_sample<span class="ansi-blue-fg">[</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/opt/anaconda3/lib/python3.8/site-packages/sklearn/svm/_classes.py</span> in <span class="ansi-cyan-fg">predict</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1718</span>             Class labels <span class="ansi-green-fg">for</span> samples <span class="ansi-green-fg">in</span> X<span class="ansi-blue-fg">.</span>
+<span class="ansi-green-intense-fg ansi-bold">   1719</span>         &#34;&#34;&#34;
+<span class="ansi-green-fg">-&gt; 1720</span><span class="ansi-red-fg">         </span>y <span class="ansi-blue-fg">=</span> super<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>predict<span class="ansi-blue-fg">(</span>X<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1721</span>         <span class="ansi-green-fg">return</span> np<span class="ansi-blue-fg">.</span>asarray<span class="ansi-blue-fg">(</span>y<span class="ansi-blue-fg">,</span> dtype<span class="ansi-blue-fg">=</span>np<span class="ansi-blue-fg">.</span>intp<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1722</span> 
+
+<span class="ansi-green-fg">/opt/anaconda3/lib/python3.8/site-packages/sklearn/svm/_base.py</span> in <span class="ansi-cyan-fg">predict</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">    431</span>             The predicted values<span class="ansi-blue-fg">.</span>
+<span class="ansi-green-intense-fg ansi-bold">    432</span>         &#34;&#34;&#34;
+<span class="ansi-green-fg">--&gt; 433</span><span class="ansi-red-fg">         </span>X <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_validate_for_predict<span class="ansi-blue-fg">(</span>X<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    434</span>         predict <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_sparse_predict <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>_sparse <span class="ansi-green-fg">else</span> self<span class="ansi-blue-fg">.</span>_dense_predict
+<span class="ansi-green-intense-fg ansi-bold">    435</span>         <span class="ansi-green-fg">return</span> predict<span class="ansi-blue-fg">(</span>X<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/opt/anaconda3/lib/python3.8/site-packages/sklearn/svm/_base.py</span> in <span class="ansi-cyan-fg">_validate_for_predict</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">    609</span> 
+<span class="ansi-green-intense-fg ansi-bold">    610</span>         <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> callable<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>kernel<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 611</span><span class="ansi-red-fg">             X = self._validate_data(
+</span><span class="ansi-green-intense-fg ansi-bold">    612</span>                 X<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    613</span>                 accept_sparse<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#34;csr&#34;</span><span class="ansi-blue-fg">,</span>
+
+<span class="ansi-green-fg">/opt/anaconda3/lib/python3.8/site-packages/sklearn/base.py</span> in <span class="ansi-cyan-fg">_validate_data</span><span class="ansi-blue-fg">(self, X, y, reset, validate_separately, **check_params)</span>
+<span class="ansi-green-intense-fg ansi-bold">    575</span>             <span class="ansi-green-fg">raise</span> ValueError<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;Validation should be done on X, y or both.&#34;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    576</span>         <span class="ansi-green-fg">elif</span> <span class="ansi-green-fg">not</span> no_val_X <span class="ansi-green-fg">and</span> no_val_y<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 577</span><span class="ansi-red-fg">             </span>X <span class="ansi-blue-fg">=</span> check_array<span class="ansi-blue-fg">(</span>X<span class="ansi-blue-fg">,</span> input_name<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#34;X&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>check_params<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    578</span>             out <span class="ansi-blue-fg">=</span> X
+<span class="ansi-green-intense-fg ansi-bold">    579</span>         <span class="ansi-green-fg">elif</span> no_val_X <span class="ansi-green-fg">and</span> <span class="ansi-green-fg">not</span> no_val_y<span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/opt/anaconda3/lib/python3.8/site-packages/sklearn/utils/validation.py</span> in <span class="ansi-cyan-fg">check_array</span><span class="ansi-blue-fg">(array, accept_sparse, accept_large_sparse, dtype, order, copy, force_all_finite, ensure_2d, allow_nd, ensure_min_samples, ensure_min_features, estimator, input_name)</span>
+<span class="ansi-green-intense-fg ansi-bold">    887</span> 
+<span class="ansi-green-intense-fg ansi-bold">    888</span>         <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> allow_nd <span class="ansi-green-fg">and</span> array<span class="ansi-blue-fg">.</span>ndim <span class="ansi-blue-fg">&gt;=</span> <span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 889</span><span class="ansi-red-fg">             raise ValueError(
+</span><span class="ansi-green-intense-fg ansi-bold">    890</span>                 <span class="ansi-blue-fg">&#34;Found array with dim %d. %s expected &lt;= 2.&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">    891</span>                 <span class="ansi-blue-fg">%</span> <span class="ansi-blue-fg">(</span>array<span class="ansi-blue-fg">.</span>ndim<span class="ansi-blue-fg">,</span> estimator_name<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">ValueError</span>: Found array with dim 3. OneClassSVM expected &lt;= 2.</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">preds</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="SVMDomain" class="doc_header"><code>class</code> <code>SVMDomain</code><a href="https://github.com/marcossantanaioc/qsar_ad/tree/master/qsar_ad/applicability_domain.py#L213" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SVMDomain</code>(<strong><code>Xref</code></strong>:<code>array</code>, <strong><code>svm_model</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">svm_domain</span> <span class="o">=</span> <span class="n">SVMDomain</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">svm_domain</span><span class="o">.</span><span class="n">svm_model</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">svm_domain</span><span class="o">.</span><span class="n">train_model</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">svm_domain</span><span class="o">.</span><span class="n">calculate_applicability_domain</span><span class="p">(</span><span class="n">X_sample</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
