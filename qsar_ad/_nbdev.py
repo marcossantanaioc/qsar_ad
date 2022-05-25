@@ -2,11 +2,9 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"BaseDomain": "AD.ipynb",
-         "kNNDomain": "AD.ipynb",
-         "SVMDomain": "AD.ipynb"}
+index = {}
 
-modules = ["applicability_domain.py"]
+modules = []
 
 doc_url = "https://marcossantanaioc.github.io/qsar_ad/"
 
